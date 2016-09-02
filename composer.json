@@ -1,0 +1,10 @@
+{
+    "name": "pdr/mozrepl",
+    "description": "Treat Javascript objects in Firefox as if they were PHP objects",
+	"license":"GPL-2.0",
+	"autoload": {
+		"psr-4": {
+			"Pdr\\": "src/"
+		}
+	}
+}
