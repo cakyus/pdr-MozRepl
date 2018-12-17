@@ -23,6 +23,6 @@ Treat Javascript objects in Firefox as if they were PHP objects.
 
 # Installation
 
- 1. Download docs/mozrepl.xpi
+ 1. Download [mozrepl.xpi](docs/mozrepl.xpi)
  2. Install MozRepl: open firefox, navigate to File > Open and choose mozrepl.xpi
  3. Start MozRepl: Tools > MozRepl > Start
