@@ -1,5 +1,7 @@
 Treat Javascript objects in Firefox as if they were PHP objects.
 
+# Usage
+
     // configuration
     $_ENV['PDR_MOZREPL_HOST'] = '127.0.0.1';
     $_ENV['PDR_MOZREPL_PORT'] = 4242;
@@ -18,3 +20,9 @@ Treat Javascript objects in Firefox as if they were PHP objects.
 
     // wait until page loaded
     $window->waitReady();
+
+# Installation
+
+ 1. Download docs/mozrepl.xpi
+ 2. Install MozRepl: open firefox, navigate to File > Open and choose mozrepl.xpi
+ 3. Start MozRepl: Tools > MozRepl > Start
