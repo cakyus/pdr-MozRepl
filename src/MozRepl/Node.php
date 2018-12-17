@@ -30,17 +30,17 @@ class Node {
 	public function __get($propertyName) {
 
 		$variableName = uniqid('_');
-		$this->_mozRepl->_send('var '.$variableName.' = '
+		$this->_mozRepl->send('var '.$variableName.' = '
 			.$this->_mozReplVariableName.'.'.$propertyName
 			);
-		$type = $this->_mozRepl->_send('typeof('.$variableName.')');
+		$type = $this->_mozRepl->send('typeof('.$variableName.')');
 
 		if ($type == 'object') {
 			return new \Pdr\MozRepl\Node($this->_mozRepl, $variableName);
 		} elseif ($type == 'string' || $type == 'number') {
-			return $this->_mozRepl->_send($variableName);
+			return $this->_mozRepl->send($variableName);
 		} elseif ($type == 'boolean') {
-			$text = $this->_mozRepl->_send($variableName);
+			$text = $this->_mozRepl->send($variableName);
 			if ($text == 'true') {
 				return TRUE;
 			} else {
@@ -55,7 +55,7 @@ class Node {
 
 	public function __set($propertyName, $propertyValue) {
 
-		$text = $this->_mozRepl->_send(
+		$text = $this->_mozRepl->send(
 			$this->_mozReplVariableName.'.'.$propertyName
 			.' = \''.addslashes($propertyValue).'\''
 		);
@@ -77,11 +77,11 @@ class Node {
 		}
 
 		$variableName = uniqid('_');
-		$this->_mozRepl->_send('var '.$variableName.' = '
+		$this->_mozRepl->send('var '.$variableName.' = '
 			.$this->_mozReplVariableName.'.'.$methodName
 			.'('.implode(',', $arguments).')'
 			);
-		$type = $this->_mozRepl->_send('typeof('.$variableName.')');
+		$type = $this->_mozRepl->send('typeof('.$variableName.')');
 
 		if ($type == 'object') {
 			return new \Pdr\MozRepl\Node($this->_mozRepl, $variableName);
