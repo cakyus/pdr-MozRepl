@@ -112,6 +112,11 @@ class Window {
 			if (preg_match("/\.+>\s*$/",$buffer,$match)) {
 				socket_write($socket, ";\n");
 				$error = $this->socketRead($socket);
+				if ($error === 'function() {...}'){
+					// function creation
+					break;
+				}
+
 				throw new \Exception($error);
 			}
 			if (preg_match('|^(.*)\s*repl\d*>\s*$|s',$buffer,$match)) {
