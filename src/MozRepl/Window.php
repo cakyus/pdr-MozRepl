@@ -225,4 +225,60 @@ class Window {
 		trigger_error('wait done', E_USER_NOTICE);
 		return TRUE;
 	}
+
+	/**
+	 * Download URL
+	 * @param string $downloadUrl The URL will be downloaded.
+	 * @return string Downloaded file path.
+	 **/
+
+	public function download($downloadUrl) {
+
+		// Create temporary file
+
+		$type = $this->send("typeof _MozReplDownloadUrl");
+		if ($type == 'undefined'){
+			$this->send('_MozReplDownloadUrl = function(downloadUrl){
+
+sourceWindow = this.getBrowser().contentWindow
+
+Components.utils.import("resource://gre/modules/FileUtils.jsm");
+
+var obj_TargetFile = FileUtils.getFile("TmpD", ["mozRepl.tmp"]);
+obj_TargetFile.createUnique(
+Components.interfaces.nsIFile.NORMAL_FILE_TYPE, FileUtils.PERMS_FILE
+);
+
+var obj_URI = Components.classes["@mozilla.org/network/io-service;1"]
+	.getService(Components.interfaces.nsIIOService)
+	.newURI(downloadUrl, null, null)
+;
+
+if(!obj_TargetFile.exists()) {
+	obj_TargetFile.create(0x00,0644);
+}
+
+var obj_Persist = Components
+	.classes["@mozilla.org/embedding/browser/nsWebBrowserPersist;1"]
+	.createInstance(Components.interfaces.nsIWebBrowserPersist)
+;
+
+const nsIWBP = Components.interfaces.nsIWebBrowserPersist;
+const flags = nsIWBP.PERSIST_FLAGS_REPLACE_EXISTING_FILES;
+obj_Persist.persistFlags = flags | nsIWBP.PERSIST_FLAGS_FROM_CACHE;
+
+var privacyContext = sourceWindow
+	.QueryInterface(Components.interfaces.nsIInterfaceRequestor)
+	.getInterface(Components.interfaces.nsIWebNavigation)
+	.QueryInterface(Components.interfaces.nsILoadContext)
+;
+
+obj_Persist.saveURI(obj_URI,null,null,null,null,null,obj_TargetFile,privacyContext)
+
+return obj_TargetFile.path;
+}');
+		}
+		$downloadFile = $this->send("_MozReplDownloadUrl('$downloadUrl')");
+		return $downloadFile;
+	}
 }
