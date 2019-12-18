@@ -281,4 +281,45 @@ return obj_TargetFile.path;
 		$downloadFile = $this->send("_MozReplDownloadUrl('$downloadUrl')");
 		return $downloadFile;
 	}
+
+	/**
+	 * Get cookie from host
+	 *
+	 * Tool > Options > Privacy > History > Firefox will : Remember history
+	 *
+	 **/
+
+	public function getCookieFromHost($hostname, $path=null) {
+
+		$cookieService = uniqid('_');
+		$cookieEnum = uniqid('_');
+		$this->send("var $cookieService  = Services.cookies");
+		$this->send("var $cookieEnum  = $cookieService.getCookiesFromHost('$hostname')");
+
+		$cookieHeaderValueItem = array();
+
+		while ($this->send("$cookieEnum.hasMoreElements()") == 'true'){
+			$hostCookie  = uniqid('_');
+			$this->send("var $hostCookie = $cookieEnum.getNext()");
+			$cookiePath = $this->send("$hostCookie.QueryInterface(Ci.nsICookie2).path");
+			$cookieName = $this->send("$hostCookie.QueryInterface(Ci.nsICookie2).name");
+			$cookieValue = $this->send("$hostCookie.QueryInterface(Ci.nsICookie2).value");
+			if (is_null($path) == false){
+				if ($path == $cookiePath){
+					// cookie accepted, do nothing
+				} else {
+					continue;
+				}
+			}
+			$cookieItem = new \stdClass;
+			$cookieItem->path = $cookiePath;
+			$cookieItem->name = $cookieName;
+			$cookieItem->value = $cookieValue;
+			$cookieHeaderValueItem[] = $cookieItem->name.'='.$cookieItem->value;
+		}
+
+		$cookieHeaderValue = implode('; ', $cookieHeaderValueItem);
+		return $cookieHeaderValue;
+	}
+
 }
